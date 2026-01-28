@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Hero</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #1a1a1d; color: #fff; display: flex; justify-content: center; padding-top: 50px; }
+        
+        .form-container { 
+            background: #0b0c10; padding: 40px; border: 1px solid #d4af37; border-radius: 10px; width: 400px; 
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
+        }
+        
+        h2 { font-family: 'MedievalSharp', cursive; color: #d4af37; text-align: center; margin-top: 0; }
+        
+        label { display: block; margin-top: 15px; color: #66fcf1; font-weight: bold; font-size: 0.9em; }
+        
+        input, select { 
+            width: 100%; padding: 10px; margin-top: 5px; 
+            background: #1f2833; border: 1px solid #45a29e; color: white; border-radius: 4px; box-sizing: border-box;
+        }
+        input:focus, select:focus { border-color: #d4af37; outline: none; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        
+        button { 
+            width: 100%; padding: 15px; background: linear-gradient(45deg, #2ecc71, #27ae60); 
+            color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 25px; font-weight: bold;
+        }
+        button:hover { box-shadow: 0 0 10px #2ecc71; }
+        
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #7f8c8d; text-decoration: none; }
+        .back-link:hover { color: #d4af37; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>✨ Summoning Ritual</h2>
+    
+    <label>Hero Name:</label>
+    <input type="text" id="name" placeholder="Example: Arthas">
+    
+    <div class="stats-grid">
+        <div>
+            <label>Class:</label>
+            <select id="charClass">
+                <option value="Warrior">⚔️ Warrior</option>
+                <option value="Mage">🔮 Mage</option>
+                <option value="Rogue">🗡️ Rogue</option>
+                <option value="Cleric">❤️ Cleric</option>
+            </select>
+        </div>
+        <div>
+            <label>Level:</label>
+            <input type="number" id="level" value="1" min="1">
+        </div>
+    </div>
+    
+    <h3 style="color: #d4af37; font-family: 'MedievalSharp'; margin-bottom: 5px; margin-top: 20px; border-bottom: 1px solid #333; padding-bottom: 5px;">Attributes</h3>
+    
+    <div class="stats-grid">
+        <div>
+            <label>Strength (STR):</label>
+            <input type="number" id="str" value="10">
+        </div>
+        <div>
+            <label>Health (HP):</label>
+            <input type="number" id="hp" value="20">
+        </div>
+    </div>
+
+    <button onclick="createCharacter()">Summon</button>
+    <a href="dashboard.html" class="back-link">✖ Cancel</a>
+</div>
+
+<script>
+    async function createCharacter() {
+        const charData = {
+            name: document.getElementById('name').value,
+            character_class: document.getElementById('charClass').value,
+            level: parseInt(document.getElementById('level').value),
+            stats: {
+                strength: parseInt(document.getElementById('str').value),
+                dexterity: 10, intelligence: 10,
+                hp_current: parseInt(document.getElementById('hp').value),
+                hp_max: parseInt(document.getElementById('hp').value)
+            },
+            inventory: []
+        };
+
+        const response = await fetch('/characters/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(charData)
+        });
+
+        if (response.ok) { 
+            window.location.href = 'dashboard.html'; 
+        } 
+        else { 
+            alert('Summoning failed!'); 
+        }
+    }
+</script>
+</body>
+</html>

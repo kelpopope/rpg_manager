@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RPG Manager - Heroes</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- MAIN STYLES --- */
+        body { font-family: 'Roboto', sans-serif; background-color: #121212; color: #e0e0e0; padding: 20px; background-image: radial-gradient(#2c3e50 1px, transparent 1px); background-size: 20px 20px; }
+        
+        .nav { background: #0b0c10; padding: 15px 30px; border-radius: 8px; border-bottom: 3px solid #d4af37; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .nav span { font-family: 'MedievalSharp', cursive; font-size: 1.5em; color: #d4af37; }
+        .nav a { color: #66fcf1; text-decoration: none; margin-left: 20px; font-weight: bold; transition: 0.3s; }
+        .nav a:hover { color: #fff; text-shadow: 0 0 5px #66fcf1; }
+        .nav button { background: #45a29e; border: none; padding: 8px 15px; color: black; font-weight: bold; border-radius: 4px; cursor: pointer; }
+
+        h1 { font-family: 'MedievalSharp', cursive; color: #d4af37; text-align: center; margin-top: 30px; text-shadow: 2px 2px 0px black; }
+
+        /* --- CARDS --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
+        
+        .card { 
+            background: #1f2833; padding: 20px; border-radius: 10px; border: 1px solid #45a29e; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; position: relative; overflow: hidden; 
+        }
+        .card:hover { transform: translateY(-5px); border-color: #d4af37; }
+        
+        /* CLASS COLOR ACCENTS */
+        .border-Warrior { border-top: 5px solid #e74c3c; } 
+        .border-Mage { border-top: 5px solid #3498db; }   
+        .border-Rogue { border-top: 5px solid #2ecc71; }   
+        .border-Cleric { border-top: 5px solid #f1c40f; } 
+
+        .card h3 { margin-top: 0; font-family: 'MedievalSharp', cursive; font-size: 1.6em; color: white; display: flex; justify-content: space-between; align-items: center;}
+        
+        /* CLASS BADGE STYLE */
+        .class-badge {
+            display: inline-block; padding: 4px 10px; border-radius: 15px; 
+            font-size: 0.8em; font-weight: bold; color: white; text-transform: uppercase; margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .bg-Warrior { background: linear-gradient(45deg, #c0392b, #e74c3c); }
+        .bg-Mage { background: linear-gradient(45deg, #2980b9, #3498db); }
+        .bg-Rogue { background: linear-gradient(45deg, #27ae60, #2ecc71); }
+        .bg-Cleric { background: linear-gradient(45deg, #f39c12, #f1c40f); color: black; }
+
+        .level-circle {
+            background: #d4af37; color: black; width: 30px; height: 30px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.7em; font-weight: bold; border: 2px solid #fff;
+        }
+
+        /* HP BAR */
+        .hp-info { display: flex; justify-content: space-between; font-size: 0.8em; margin-bottom: 3px; color: #aaa; }
+        .hp-bar-bg { background: #000; height: 12px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #555; overflow: hidden; position: relative;}
+        .hp-bar-fill { height: 100%; width: 100%; transition: width 0.3s; }
+        .hp-text-overlay { position: absolute; width: 100%; text-align: center; top: -1px; font-size: 9px; color: white; text-shadow: 1px 1px 1px black; }
+
+        /* BUTTONS */
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .btn-full { grid-column: span 2; }
+        button.action { border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; font-size: 0.9em; transition: 0.2s; }
+        .btn-damage { background: #c0392b; } .btn-damage:hover { background: #e74c3c; }
+        .btn-heal { background: #27ae60; } .btn-heal:hover { background: #2ecc71; }
+        .btn-inv { background: #f39c12; color: #000; } .btn-inv:hover { background: #f1c40f; }
+        .btn-delete { background: transparent; border: 1px solid #555; color: #7f8c8d; } .btn-delete:hover { border-color: #c0392b; color: #c0392b; }
+
+        /* MODAL WINDOW */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-content { background-color: #0b0c10; border: 2px solid #d4af37; padding: 25px; width: 450px; border-radius: 10px; position: relative; box-shadow: 0 0 30px rgba(212, 175, 55, 0.3); }
+        .close-btn { position: absolute; top: 10px; right: 15px; color: #aaa; font-size: 28px; cursor: pointer; } .close-btn:hover { color: white; }
+        
+        /* INVENTORY ELEMENTS */
+        .add-item-form { display: flex; gap: 5px; margin-bottom: 20px; background: #1a1a1d; padding: 10px; border-radius: 5px; border: 1px solid #333; }
+        .add-item-form input, .add-item-form select { background: black; color: white; border: 1px solid #555; padding: 8px; border-radius: 4px; flex: 1; }
+        .btn-add { background: #27ae60; color: white; border: none; padding: 0 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        
+        .inv-item { background: #1f2833; padding: 10px; margin-bottom: 8px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #f39c12; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .del-item-btn { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <span>⚔️ RPG Manager: <span id="userDisplay" style="font-size: 0.8em; color: white;">...</span></span>
+        <div>
+            <a href="create.html">✨ New Hero</a>
+            <a href="stats.html">📜 Chronicles</a>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <h1>Your Hero Party</h1>
+    <div id="charactersList" class="grid"></div>
+
+    <div id="inventoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle" style="color: #d4af37; font-family: 'MedievalSharp'; margin-top: 0; text-align: center;">Backpack</h2>
+            
+            <div class="add-item-form">
+                <input type="text" id="newItemName" placeholder="Item name...">
+                <select id="newItemType">
+                    <option value="Weapon">⚔️ Weapon</option>
+                    <option value="Potion">🧪 Potion</option>
+                    <option value="Armor">🛡️ Armor</option>
+                    <option value="Loot">💎 Loot</option>
+                </select>
+                <button class="btn-add" onclick="addItem()">+</button>
+            </div>
+
+            <div id="modalItems"></div>
+        </div>
+    </div>
+
+    <script>
+        let allCharacters = [];
+        let currentHeroId = null; 
+
+        const user = localStorage.getItem('user');
+        if (!user) window.location.href = '/';
+        document.getElementById('userDisplay').innerText = user;
+
+        // --- MAIN RENDER FUNCTION ---
+        async function loadCharacters() {
+            const response = await fetch('/characters/');
+            allCharacters = await response.json();
+            const container = document.getElementById('charactersList');
+            container.innerHTML = '';
+
+            allCharacters.forEach(char => {
+                // HP Calculation
+                const hpPercent = (char.stats.hp_current / char.stats.hp_max) * 100;
+                let hpColor = '#2ecc71'; 
+                if (hpPercent < 50) hpColor = '#f1c40f'; 
+                if (hpPercent < 25) hpColor = '#e74c3c';
+
+                // Class icon selection
+                let classIcon = '👤';
+                if (char.character_class === 'Warrior') classIcon = '⚔️';
+                if (char.character_class === 'Mage') classIcon = '🔮';
+                if (char.character_class === 'Rogue') classIcon = '🗡️';
+                if (char.character_class === 'Cleric') classIcon = '✨';
+
+                const html = `
+                    <div class="card border-${char.character_class}">
+                        <h3>
+                            <span>${char.name}</span>
+                            <div class="level-circle">${char.level}</div>
+                        </h3>
+                        
+                        <div class="class-badge bg-${char.character_class}">
+                            ${classIcon} ${char.character_class}
+                        </div>
+                        
+                        <div class="hp-info">
+                            <span>HP</span> 
+                            <span>${char.stats.hp_current} / ${char.stats.hp_max}</span>
+                        </div>
+                        <div class="hp-bar-bg">
+                            <div class="hp-bar-fill" style="width: ${hpPercent}%; background: ${hpColor};"></div>
+                            <div class="hp-text-overlay">${Math.round(hpPercent)}%</div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="action btn-damage" onclick="updateHp('${char._id}', 'damage')">⚔️ -10</button>
+                            <button class="action btn-heal" onclick="updateHp('${char._id}', 'heal')">💚 +10</button>
+                            <button class="action btn-inv btn-full" onclick="openInventory('${char._id}')">🎒 Backpack (${char.inventory.length})</button>
+                            <button class="action btn-delete btn-full" onclick="deleteChar('${char._id}')">💀 Banish</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+
+            if(currentHeroId) {
+                const updatedHero = allCharacters.find(c => c._id === currentHeroId);
+                if(updatedHero) renderInventoryList(updatedHero);
+            }
+        }
+
+        async function updateHp(id, type) {
+            let url = type === 'damage' ? `/characters/${id}/damage?damage=10` : `/characters/${id}/heal?amount=10`;
+            await fetch(url, { method: 'PUT' });
+            loadCharacters();
+        }
+
+        async function deleteChar(id) {
+            if(!confirm('This hero will be deleted forever. Continue?')) return;
+            await fetch(`/characters/${id}`, { method: 'DELETE' });
+            loadCharacters();
+        }
+
+        // --- INVENTORY ---
+        function openInventory(id) {
+            currentHeroId = id;
+            const char = allCharacters.find(c => c._id === id);
+            document.getElementById('modalTitle').innerText = `🎒 Backpack: ${char.name}`;
+            renderInventoryList(char);
+            document.getElementById('inventoryModal').style.display = 'flex';
+        }
+
+        function renderInventoryList(char) {
+            const list = document.getElementById('modalItems');
+            list.innerHTML = '';
+            if (char.inventory.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:gray; font-style:italic;">Empty...</p>';
+            } else {
+                char.inventory.forEach(item => {
+                    list.innerHTML += `
+                        <div class="inv-item">
+                            <div>
+                                <span style="color:white; font-weight:bold;">${item.name}</span>
+                                <span style="color:#f39c12; font-size:0.8em; margin-left:8px;">[${item.type}]</span>
+                            </div>
+                            <button class="del-item-btn" onclick="deleteItem('${item.name}')" title="Discard">×</button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function addItem() {
+            const name = document.getElementById('newItemName').value;
+            const type = document.getElementById('newItemType').value;
+            if(!name) return;
+
+            await fetch(`/characters/${currentHeroId}/items`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, type: type, value: 50 })
+            });
+            document.getElementById('newItemName').value = ''; 
+            loadCharacters(); 
+        }
+
+        async function deleteItem(itemName) {
+            if(!confirm(`Discard ${itemName}?`)) return;
+            await fetch(`/characters/${currentHeroId}/items/${itemName}`, { method: 'DELETE' });
+            loadCharacters();
+        }
+
+        function closeModal() {
+            document.getElementById('inventoryModal').style.display = 'none';
+            currentHeroId = null;
+        }
+
+        window.onclick = function(e) { if (e.target == document.getElementById('inventoryModal')) closeModal(); }
+        function logout() { localStorage.removeItem('user'); window.location.href = '/'; }
+
+        loadCharacters();
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #1a1a1d; color: #fff; display: flex; flex-direction: column; align-items: center; padding: 40px; }
+        
+        .table-container { 
+            background: #0b0c10; padding: 30px; border-radius: 8px; border: 1px solid #45a29e; 
+            box-shadow: 0 0 20px rgba(69, 162, 158, 0.2); width: 80%; max-width: 700px; 
+        }
+        
+        h2 { font-family: 'MedievalSharp', cursive; color: #d4af37; text-align: center; margin-bottom: 5px; }
+        p { text-align: center; color: #7f8c8d; font-size: 0.9em; margin-bottom: 25px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        
+        th { text-align: left; padding: 15px; color: #d4af37; border-bottom: 2px solid #45a29e; font-family: 'MedievalSharp'; font-size: 1.1em; }
+        td { padding: 15px; border-bottom: 1px solid #1f2833; color: #c5c6c7; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #1f2833; color: white; }
+
+        .back-link { margin-top: 30px; text-decoration: none; color: #66fcf1; border: 1px solid #66fcf1; padding: 10px 20px; border-radius: 5px; transition: 0.3s; }
+        .back-link:hover { background: #66fcf1; color: black; }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <h2>📊 Guild Archives (Aggregation)</h2>
+    <p>Data gathered by the magic of MongoDB Aggregation Pipeline</p>
+    
+    <table id="statsTable">
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Total Heroes</th>
+                <th>Avg. Level</th>
+                <th>Max Strength</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<a href="dashboard.html" class="back-link">↩ Return to the Hall</a>
+
+<script>
+    async function loadStats() {
+        const response = await fetch('/stats/classes');
+        const data = await response.json();
+        const tbody = document.querySelector('#statsTable tbody');
+        
+        data.forEach(row => {
+            const tr = `
+                <tr>
+                    <td><b style="color: #fff;">${row.class_name}</b></td>
+                    <td>${row.total_heroes}</td>
+                    <td>${row.average_level}</td>
+                    <td>${row.max_strength}</td>
+                </tr>
+            `;
+            tbody.innerHTML += tr;
+        });
+    }
+    loadStats();
+</script>
+</body>
+</html>
