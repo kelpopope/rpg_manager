@@ -678,31 +678,4 @@ rpg_manager/
 
 ---
 
-## 📈 Future Enhancements
-
-- [ ] JWT authentication tokens
-- [ ] Campaign management system
-- [ ] Real-time multiplayer support (WebSockets)
-- [ ] Advanced character skills/spells system
-- [ ] Loot drop mechanics
-- [ ] Experience/leveling system
-- [ ] Party-based encounters
-- [ ] Mobile app (React Native)
-- [ ] Cloud deployment (MongoDB Atlas)
-
----
-
-## 📞 Support & Documentation
-
-For detailed API documentation, visit:
-```
-http://localhost:8000/docs
-```
-
-This provides interactive Swagger UI for testing all endpoints.
-
----
-
 **Last Updated:** January 2026  
-**Version:** 1.0.0  
-**License:** MIT
