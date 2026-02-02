@@ -28,9 +28,9 @@
 ✅ Secure authentication system  
 ✅ Responsive medieval-themed UI  
 
----
 
-## 🏗️ System Architecture
+
+##  System Architecture
 
 ### Architecture Diagram
 ```
@@ -97,7 +97,6 @@
    Stats Request → Aggregation Pipeline → Group/Sort/Project → JSON Response
    ```
 
----
 
 ## 🗄️ Database Schema
 
@@ -185,8 +184,6 @@
 - **Potion**: Consumables (effect_value = healing amount)
 - **Armor**: Defensive items (effect_value = defense bonus)
 - **Loot**: Treasure/collectibles (effect_value = optional)
-
----
 
 ## 🔍 MongoDB Queries
 
@@ -309,7 +306,7 @@ db.users.findOne({ "username": username })
 // Returns null if user doesn't exist
 ```
 
----
+
 
 ## 📡 API Documentation
 
@@ -506,8 +503,6 @@ DELETE /characters/{id}/items/{item_name}
 }
 ```
 
----
-
 ## ⚡ Indexing and Optimization Strategy
 
 ### 1. **Compound Index (Characters Collection)**
@@ -575,7 +570,6 @@ Concurrent Connections: Handled by Motor async driver
 Database Size: Scales efficiently for 1000+ characters
 ```
 
----
 
 ## 👥 Student Contributions
 
@@ -622,7 +616,6 @@ uvicorn main:app --reload
 - **Frontend:** http://localhost:8000
 - **API Docs:** http://localhost:8000/docs (Swagger UI)
 
----
 
 ## 📚 Project Files
 
@@ -639,7 +632,6 @@ rpg_manager/
 └── __pycache__/         # Python cache
 ```
 
----
 
 ## 🔐 Security Considerations
 
@@ -649,6 +641,5 @@ rpg_manager/
 4. **Database:** Local MongoDB (production: add SSL/TLS)
 5. **Future:** JWT tokens, rate limiting, CORS configuration
 
----
 
 **Last Updated:** January 2026  
